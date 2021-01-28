@@ -138,7 +138,7 @@ function ToolTipUpdate(chosenXaxis, chosenYaxis, circlesGroup){
 
 // Get data from  CSV file, process data
 (async function(){
-    const healthData = await d3.csv("../data/data.csv");
+    const healthData = await d3.csv("assets/data/data.csv");
 
     // convert data from string to interger
     healthData.forEach(function(data){
@@ -252,7 +252,7 @@ const obesityLabel = ylabelsGroup.append("text")
             .classed("aText", true)
             .text("Obese (%)");
 
- // updateToolTip function after importing csv 
+ // Create ToolTipUpdate function after importing csv 
  circlesGroup = ToolTipUpdate(chosenXaxis, chosenYaxis, circlesGroup);
 
  // x axis labels event listener
@@ -315,13 +315,68 @@ const obesityLabel = ylabelsGroup.append("text")
                     .classed("inactive", false);  
             }
           // update tooltip with new info after changing x-axis 
-          circlesGroup = updateToolTip(chosenXaxis, chosenYaxis, circlesGroup); 
+          circlesGroup = ToolTipUpdate(chosenXaxis, chosenYaxis, circlesGroup); 
       }})
 
-// y axis labels event listener
+// call the y axis label event listener
 ylabelsGroup.selectAll("text")
 .on("click", function() {
-// get value of selection
+// obtain and store the selection
 const value = d3.select(this).attr("value");
 console.log(`${value} click`)
 if (value !== chosenYaxis) {
+     // this will replace chosenXAxis with value
+     chosenYaxis = value;
+     console.log(chosenYaxis)
+ 
+     // this will update x scale for new data
+     yLinearScale = yScale(healthData, chosenYaxis);
+ 
+     // this will update x axis with transition
+     yAxis = renderYAxes(yLinearScale, yAxis);
+
+     // updates circles with new x values
+    circlesGroup = renderCircles(circlesGroup, xLinearScale, yLinearScale, chosenXaxis, chosenYaxis);
+
+    // updates texts with new x values
+   txtGroup = renderTexts(txtGroup, xLinearScale, yLinearScale, chosenXaxis, chosenYaxis);
+
+   // changes classes to change bold text
+   if (chosenYaxis === "healthcare") {
+     healthCareLabel
+           .classed("active", true)
+           .classed("inactive", false);
+     smokeLabel
+           .classed("active", false)
+           .classed("inactive", true);
+     obesityLabel
+           .classed("active", false)
+           .classed("inactive", true);
+   }
+   else if (chosenYaxis === "smokes"){
+     healthCareLabel
+         .classed("active", false)
+         .classed("inactive", true);
+     smokeLabel
+         .classed("active", true)
+         .classed("inactive", false);
+     obesityLabel
+         .classed("active", false)
+         .classed("inactive", true);
+   }
+   else{
+     healthCareLabel
+           .classed("active", false)
+           .classed("inactive", true);
+     smokeLabel
+           .classed("active", false)
+           .classed("inactive", true);
+     obesityLabel
+           .classed("active", true)
+           .classed("inactive", false);  
+   }
+    // update tooltip with new info after changing y-axis 
+    circlesGroup = ToolTipUpdate(chosenXaxis, chosenYaxis, circlesGroup); 
+ }})
+
+})()
