@@ -266,9 +266,9 @@ const obesityLabel = ylabelsGroup.append("text")
             // this replaces chosenXAxis with new val
             chosenXaxis = value;
             console.log(chosenXaxis)
-
-      // functions here found above csv import
-        // updates x scale for new data
+        
+            // functions here found above csv import
+             // updates x scale for new data
             xLinearScale = xScale(healthData, chosenXaxis);
 
             // updates x axis with transition
@@ -317,3 +317,11 @@ const obesityLabel = ylabelsGroup.append("text")
           // update tooltip with new info after changing x-axis 
           circlesGroup = updateToolTip(chosenXaxis, chosenYaxis, circlesGroup); 
       }})
+
+// y axis labels event listener
+ylabelsGroup.selectAll("text")
+.on("click", function() {
+// get value of selection
+const value = d3.select(this).attr("value");
+console.log(`${value} click`)
+if (value !== chosenYaxis) {
