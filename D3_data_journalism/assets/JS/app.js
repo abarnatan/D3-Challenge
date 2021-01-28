@@ -267,5 +267,53 @@ const obesityLabel = ylabelsGroup.append("text")
             chosenXaxis = value;
             console.log(chosenXaxis)
 
-         }
-         
+      // functions here found above csv import
+        // updates x scale for new data
+            xLinearScale = xScale(healthData, chosenXaxis);
+
+            // updates x axis with transition
+            xAxis = renderXAxes(xLinearScale, xAxis);
+
+            // updates circles with new x values
+            circlesGroup = renderCircles(circlesGroup, xLinearScale, yLinearScale, chosenXaxis, chosenYaxis);
+
+             // updates texts with new x values
+            txtGroup = renderTexts(txtGroup, xLinearScale, yLinearScale, chosenXaxis, chosenYaxis);
+
+            // changes classes to change bold text
+            if (chosenXaxis === "poverty") {
+                povertyLabel
+                    .classed("active", true)
+                    .classed("inactive", false);
+                ageLabel
+                    .classed("active", false)
+                    .classed("inactive", true);
+                incomeLabel
+                    .classed("active", false)
+                    .classed("inactive", true);
+            }
+            else if (chosenXaxis === "age"){
+              povertyLabel
+                  .classed("active", false)
+                  .classed("inactive", true);
+              ageLabel
+                  .classed("active", true)
+                  .classed("inactive", false);
+              incomeLabel
+                  .classed("active", false)
+                  .classed("inactive", true);
+            }
+            else{
+              povertyLabel
+                    .classed("active", false)
+                    .classed("inactive", true);
+                ageLabel
+                    .classed("active", false)
+                    .classed("inactive", true);
+                incomeLabel
+                    .classed("active", true)
+                    .classed("inactive", false);  
+            }
+          // update tooltip with new info after changing x-axis 
+          circlesGroup = updateToolTip(chosenXaxis, chosenYaxis, circlesGroup); 
+      }})
